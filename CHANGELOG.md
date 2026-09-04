@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- WebUI 展示前台与后台工具调用的有界生命周期，按工具调用 ID 合并状态，并默认不保留
+  原始参数与结果内容。
 - 后台 Session 模型覆盖统一使用 ACP `configOptions` 与
   `session/set_config_option`，不再调用私有模型接口或生成后台配置文件；未声明标准
   模型选项的 Agent 将沿用自身配置。OpenCode/OpenClaw 一键托管初始化保持不变。
