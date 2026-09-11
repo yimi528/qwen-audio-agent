@@ -11,11 +11,11 @@ import {
   readFileSync,
   renameSync,
   rmdirSync,
-  rmSync,
   statSync,
 } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { promisify } from 'node:util'
+import { removeTreeSync } from '../../shared/file-transaction-lock.mjs'
 import {
   isBuiltinOrbSkin,
   ORB_SKIN_ID_PATTERN,
@@ -284,10 +284,10 @@ function stageSkin(sourceDir, info, skinsRoot) {
       join(staging, info.spritesheetPath),
     )
     const target = join(skinsRoot, info.id)
-    rmSync(target, { recursive: true, force: true })
+    removeTreeSync(target)
     renameSync(staging, target)
   } catch (error) {
-    rmSync(staging, { recursive: true, force: true })
+    removeTreeSync(staging)
     throw error
   }
 }
@@ -326,7 +326,7 @@ export async function importSkin({
     stageSkin(packageDir, info, skinsRoot)
     return { id: info.id, displayName: info.displayName }
   } finally {
-    if (temporaryDir) rmSync(temporaryDir, { recursive: true, force: true })
+    if (temporaryDir) removeTreeSync(temporaryDir)
   }
 }
 
@@ -351,7 +351,7 @@ export function removeSkin({ id, skinsRoot }) {
   }
   const target = join(skinsRoot, skinId)
   if (!existsSync(target)) return false
-  rmSync(target, { recursive: true, force: true })
+  removeTreeSync(target)
   return true
 }
 
